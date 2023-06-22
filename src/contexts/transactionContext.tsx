@@ -3,11 +3,11 @@ import { api } from '../utils/api';
 
 interface Transaction {
   id: number;
-  description: string;
+  title: string;
   type: 'income' | 'outcome';
-  price: number;
+  amount: number;
   category: string;
-  createdAt: string;
+  create_at: string;
 }
 
 interface TransactionContextType {

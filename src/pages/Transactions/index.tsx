@@ -5,11 +5,12 @@ import { SearchForm } from "./components/SearchForm";
 import { ColumnPrice, TransactionsContainer, TransactionsTable } from "./styles";
 import { api } from "../../utils/api";
 import { TransactionsContext } from "../../contexts/transactionContext";
+import { dateFormatter, priceFormattter } from "../../utils/formatter";
 
 export function Transactions() {
 
   const {transactions} = useContext(TransactionsContext)
-  
+
   return (
     <div>
       <Header />
@@ -19,19 +20,18 @@ export function Transactions() {
         <SearchForm/>
           <TransactionsTable >
         <tbody>
-          <tr>
-            <td width='50%'>Desenvolvimento do site</td>
-            <ColumnPrice typeTransaction="income">R$ 17.400,00</ColumnPrice>
-            <td>Venda</td>
-            <td>13/04/2022</td>
-          </tr>
-
-          <tr>
-            <td width='50%'>Hamburguer</td>
-            <ColumnPrice typeTransaction="outcome">R$ 400,00</ColumnPrice>
-            <td>Alimentação</td>
-            <td>15/04/2022</td>
-          </tr>
+          {transactions.map(transaction => {
+            return (
+              <tr>
+              <td width='50%'>{transaction.title}</td>
+              <ColumnPrice typeTransaction={transaction.type}>{priceFormattter.format(transaction.amount)}</ColumnPrice>
+              <td>{transaction.category}</td>
+              <td>{dateFormatter.format(new Date(transaction.create_at))}</td>
+            </tr>
+  
+            )
+          })}
+         
         </tbody>
       </TransactionsTable>
        </TransactionsContainer>
