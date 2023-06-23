@@ -6,9 +6,10 @@ import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useContext } from 'react'
 import { TransactionsContext } from '../../contexts/transactionContext'
+import { api } from '../../utils/api'
 
 
-export function NewTransactionModal() {
+export function NewTransactionModal({closeModal}) {
 
   const newTransactionFormSchema = z.object({
     title : z.string(),
@@ -25,10 +26,30 @@ export function NewTransactionModal() {
 
 
   async function  handleNewTransaction(data: newTransactionFormInputs) {
+
+    const {
+      amount,
+      category,
+      title,
+      type }  = data
+
+      const amountNumber = Number(amount)
+
+      try {
+        await api.post('/transactions', {
+          amount: amountNumber,
+          category,
+          title,
+          type
+        })
+      } catch (error) {
+        console.log(error)
+      }
+    
+      closeModal(false)
   }
 
   return (
-
     <Dialog.Portal>
     <Overlay/>
     <Content>
@@ -81,5 +102,6 @@ export function NewTransactionModal() {
     
     </Content>
   </Dialog.Portal>
+
   )
 }
