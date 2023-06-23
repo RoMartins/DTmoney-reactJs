@@ -52,8 +52,13 @@ form {
     padding: 0 1.25rem;
     font-weight: bold;
     cursor: pointer;
-
-    &:hover {
+    
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  
+    &:not(:disabled):hover {
       background: ${props => props.theme['green-700']};
       transition: background-color 0.2s;
     }
@@ -80,6 +85,7 @@ export const TransactionType = styled(Radio.Root)`
   gap: 1rem;
   margin-top: 0.5rem;
 `
+
 
 interface TransactionTypeButtonProps {
   variant: 'income' | 'outcome'

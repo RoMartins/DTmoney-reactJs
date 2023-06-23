@@ -1,9 +1,8 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { Header } from "../../components/Header";
 import { Summary } from "../../components/Summary";
 import { SearchForm } from "./components/SearchForm";
 import { ColumnPrice, TransactionsContainer, TransactionsTable } from "./styles";
-import { api } from "../../utils/api";
 import { TransactionsContext } from "../../contexts/transactionContext";
 import { dateFormatter, priceFormattter } from "../../utils/formatter";
 
