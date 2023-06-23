@@ -4,13 +4,16 @@ import { ArrowCircleDown, ArrowCircleUp, X } from 'phosphor-react'
 import { Controller, useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { api } from '../../utils/api'
 import { useContext } from 'react'
 import { TransactionsContext } from '../../contexts/transactionContext'
-import { api } from '../../utils/api'
 
+interface NewTransactionModalProps {
+  closeModal: (status : boolean) => void
+}
 
-export function NewTransactionModal({closeModal}) {
-
+export function NewTransactionModal({closeModal} : NewTransactionModalProps) {
+  const {createNewTransaction} = useContext(TransactionsContext)
   const newTransactionFormSchema = z.object({
     title : z.string(),
     amount: z.string(),
@@ -20,33 +23,15 @@ export function NewTransactionModal({closeModal}) {
 
   type newTransactionFormInputs = z.infer<typeof newTransactionFormSchema>
 
-  const {register, control, handleSubmit, formState: {isSubmitting}} = useForm<newTransactionFormInputs>({
+  const {register, control, reset , handleSubmit, formState: {isSubmitting}} = useForm<newTransactionFormInputs>({
     resolver : zodResolver(newTransactionFormSchema)
   })
 
 
   async function  handleNewTransaction(data: newTransactionFormInputs) {
-
-    const {
-      amount,
-      category,
-      title,
-      type }  = data
-
-      const amountNumber = Number(amount)
-
-      try {
-        await api.post('/transactions', {
-          amount: amountNumber,
-          category,
-          title,
-          type
-        })
-      } catch (error) {
-        console.log(error)
-      }
-    
+      await createNewTransaction(data)
       closeModal(false)
+      reset()
   }
 
   return (

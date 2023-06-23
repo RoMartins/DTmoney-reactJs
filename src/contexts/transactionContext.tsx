@@ -10,9 +10,17 @@ interface Transaction {
   create_at: string;
 }
 
+interface newTransactionProps {
+  title : string;
+  amount: string;
+  category: string;
+  type: 'income' | 'outcome'
+}
+
 interface TransactionContextType {
   transactions: Transaction[];
   loadTransactions: (query?: string) => Promise<void>
+  createNewTransaction: (data: newTransactionProps ) => Promise<void>
 }
 
 interface TransactionsProviderProps {
@@ -48,8 +56,31 @@ export function TransactionsProvider({ children }: TransactionsProviderProps) {
     loadTransactions()
   }, [])
 
+  async function  createNewTransaction(data: newTransactionProps) {
+    const {
+      amount,
+      category,
+      title,
+      type }  = data
+
+      const amountNumber = Number(amount)
+
+       const response = await api.post('/transactions', {
+          amount: amountNumber,
+          category,
+          title,
+          type
+        })
+
+        const newTransactions = response.data[0]
+
+        setTransactions(state => [newTransactions,...state])
+  }
+
+ 
+
   return (
-    <TransactionsContext.Provider value={{ transactions, loadTransactions}}>
+    <TransactionsContext.Provider value={{ transactions, loadTransactions, createNewTransaction}}>
       {children}
     </TransactionsContext.Provider>
   );
